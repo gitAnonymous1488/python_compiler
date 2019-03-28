@@ -127,8 +127,8 @@ def scan_float():
 				token_str += next_digit
 				next_digit = get_next_char()
 
-
 		set_bookmark(get_position() - 1)
+		reset_to_bookmark()
 
 		return token_defs.create_float(token_str)
 
@@ -148,12 +148,14 @@ def scan_float():
 
 
 		set_bookmark(get_position() - 1)
+		reset_to_bookmark()
 
 		return token_defs.create_float(token_str)
 
 	elif token_str[0] == token_defs.decimal_prefix["DECIMAL"] and next_digit != token_defs.decimal_prefix["EXPONENT"]:
 		
 		set_bookmark(get_position() - 1)
+		reset_to_bookmark()
 
 		return token_defs.create_float(token_str)
 
@@ -232,10 +234,14 @@ def next_token():
 			token_str += next_alpha
 			next_alpha = get_next_char()
 		reset_to_bookmark()
-		return token_str
+		return token_defs.create_id(token_str)
 		
 	elif ignore(token_str):
 		return next_token()
+
+	elif token_str == token_defs.token_str_def["STR_QUOTE"]:
+		reset_to_bookmark()
+		return scan_str()
 
 	elif token_str == token_defs.token_defs_operations["ASSIGNMENT"]:
 		bookmark()
@@ -244,7 +250,7 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["NOT"]:
 		bookmark()
@@ -253,16 +259,7 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
-
-	elif token_str == token_defs.token_defs_operations["NOT"]:
-		bookmark()
-		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
-			token_str += next_relation
-		else:
-			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["LESS_THAN"]:
 		bookmark()
@@ -271,7 +268,7 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["GRT_THAN"]:
 		bookmark()
@@ -280,7 +277,7 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["BIT_AND"]:
 		bookmark()
@@ -289,7 +286,7 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["BIT_OR"]:
 		bookmark()
@@ -298,38 +295,42 @@ def next_token():
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
-		return token_str
+		return token_defs.create_operation(token_str)
 
-	elif token_str == token_defs.token_str_def["STR_QUOTE"]:
-		reset_to_bookmark()
-		return scan_str()
+	elif token_str == token_defs.token_defs_operations["LESS_THAN"]:
+		return token_defs.create_operation(token_str)
+	
+	elif token_str == token_defs.token_defs_operations["GRT_THAN"]:
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["OPAR"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["CPAR"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["OSQ"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["CSQ"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["ADD"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["SUB"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["MULT"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["DIV"]:
-		return token_str
+		return token_defs.create_operation(token_str)
 
 	elif token_str == token_defs.token_defs_operations["MOD"]:
-		return token_str
+		return token_defs.create_operation(token_str)
+	
+
 
 	return None
 
