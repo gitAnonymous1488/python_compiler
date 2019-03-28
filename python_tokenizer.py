@@ -315,6 +315,12 @@ def next_token():
 	elif token_str == token_defs.token_defs_operations["CSQ"]:
 		return token_defs.create_operation(token_str)
 
+	elif token_str == token_defs.token_defs_operations["OCB"]:
+		return token_defs.create_operation(token_str)
+
+	elif token_str == token_defs.token_defs_operations["CCB"]:
+		return token_defs.create_operation(token_str)
+
 	elif token_str == token_defs.token_defs_operations["ADD"]:
 		return token_defs.create_operation(token_str)
 
@@ -329,8 +335,6 @@ def next_token():
 
 	elif token_str == token_defs.token_defs_operations["MOD"]:
 		return token_defs.create_operation(token_str)
-	
-
 
 	return None
 

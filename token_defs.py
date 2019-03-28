@@ -21,6 +21,8 @@ token_defs_operations = {
 	"CPAR": 			")" 	,
 	"OSQ": 				"[" 	,
 	"CSQ":				"]" 	,
+	"OCB": 				"{" 	,
+	"CCB":				"}" 	,
 	"ADD": 				"+" 	,
 	"SUB":				"-" 	,
 	"MULT":				"*" 	,
@@ -41,9 +43,15 @@ token_str_def = {
 }
 
 
-key_words = [
-	""
-]
+key_words = {
+	"if":   			"IF_STAT",
+	"elseif":   		"ELIF_STAT",
+	"else":   			"ELSE_STAT",
+	"while":   			"WHILE_STAT",
+	"for":   			"FOR_STAT"
+}
+
+
 
 
 def create_int_token(token):
@@ -66,7 +74,7 @@ def create_str(token):
 
 def create_id(token):
 	if token in key_words:
-		pass
+		return { "KIND": "KEYWORD", "VALUE": token}
 	return {
 		"KIND": "ID",
 		"VALUE": token
@@ -105,6 +113,10 @@ def create_operation(token):
 		return {"KIND": "OSQ", "VALUE": token}
 	elif token == token_defs_operations["CSQ"]:
 		return {"KIND": "CSQ", "VALUE": token}
+	elif token == token_defs_operations["OCB"]:
+		return {"KIND": "OCB", "VALUE": token}
+	elif token == token_defs_operations["CCB"]:
+		return {"KIND": "CCB", "VALUE": token}
 	elif token == token_defs_operations["ADD"]:
 		return {"KIND": "ADD", "VALUE": token}
 	elif token == token_defs_operations["SUB"]:
