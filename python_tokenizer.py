@@ -57,6 +57,27 @@ def is_alpha(char):
 			(ord(char) in [ord("_")])
 
 
+def scan_str():
+	bookmark()
+	str_beginning = get_bookmark()
+
+	token_str = get_next_char()
+
+	next_char = get_next_char()
+
+	# 
+	# check for excluding characters and shit
+	# 
+
+	while next_char != "\"":
+		token_str += next_char
+		next_char = get_next_char()
+
+	token_str += next_char
+
+	return token_defs.create_str(token_str)
+
+
 # 
 # <float>  -> <digit-list> <decimal-part> <exp> |
 # 			  <digit-list> <decimal-part>	 	|
@@ -75,10 +96,12 @@ def scan_float():
 
 	next_digit = get_next_char()
 
+
 	# <digit-list>
 	while is_digit(next_digit):
 		token_str += next_digit
 		next_digit = get_next_char()
+
 
 	if next_digit == token_defs.decimal_prefix["DECIMAL"]:
 
@@ -108,6 +131,33 @@ def scan_float():
 		set_bookmark(get_position() - 1)
 
 		return token_defs.create_float(token_str)
+
+	elif token_str[0] == token_defs.decimal_prefix["DECIMAL"] and next_digit == token_defs.decimal_prefix["EXPONENT"]:
+
+		token_str += next_digit
+		next_digit = get_next_char()
+
+		if next_digit in "+-":
+			token_str += next_digit
+			next_digit = get_next_char()
+
+		# <digit-list>
+		while is_digit(next_digit):
+			token_str += next_digit
+			next_digit = get_next_char()
+
+
+		set_bookmark(get_position() - 1)
+
+		return token_defs.create_float(token_str)
+
+	elif token_str[0] == token_defs.decimal_prefix["DECIMAL"] and next_digit != token_defs.decimal_prefix["EXPONENT"]:
+		
+		set_bookmark(get_position() - 1)
+
+		return token_defs.create_float(token_str)
+
+
 	return None
 
 
@@ -170,7 +220,7 @@ def next_token():
 		reset_to_bookmark()
 		return scan_int()
 
-	elif token_str == token_defs.token_defs["DECIMAL"]:
+	elif token_str == token_defs.decimal_prefix["DECIMAL"]:
 		reset_to_bookmark()
 		return scan_float()
 
@@ -187,94 +237,98 @@ def next_token():
 	elif ignore(token_str):
 		return next_token()
 
-	elif token_str == token_defs.token_defs["ASSIGNMENT"]:
+	elif token_str == token_defs.token_defs_operations["ASSIGNMENT"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["ASSIGNMENT"]:
+		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["NOT"]:
+	elif token_str == token_defs.token_defs_operations["NOT"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["ASSIGNMENT"]:
+		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["NOT"]:
+	elif token_str == token_defs.token_defs_operations["NOT"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["ASSIGNMENT"]:
+		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["LESS_THAN"]:
+	elif token_str == token_defs.token_defs_operations["LESS_THAN"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["ASSIGNMENT"]:
+		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["GRT_THAN"]:
+	elif token_str == token_defs.token_defs_operations["GRT_THAN"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["ASSIGNMENT"]:
+		if next_relation == token_defs.token_defs_operations["ASSIGNMENT"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["BIT_AND"]:
+	elif token_str == token_defs.token_defs_operations["BIT_AND"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["BIT_AND"]:
+		if next_relation == token_defs.token_defs_operations["BIT_AND"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["BIT_OR"]:
+	elif token_str == token_defs.token_defs_operations["BIT_OR"]:
 		bookmark()
 		next_relation = get_next_char()
-		if next_relation == token_defs.token_defs["BIT_OR"]:
+		if next_relation == token_defs.token_defs_operations["BIT_OR"]:
 			token_str += next_relation
 		else:
 			reset_to_bookmark()
 		return token_str
 
-	elif token_str == token_defs.token_defs["OPAR"]:
+	elif token_str == token_defs.token_str_def["STR_QUOTE"]:
+		reset_to_bookmark()
+		return scan_str()
+
+	elif token_str == token_defs.token_defs_operations["OPAR"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["CPAR"]:
+	elif token_str == token_defs.token_defs_operations["CPAR"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["OSQ"]:
+	elif token_str == token_defs.token_defs_operations["OSQ"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["CSQ"]:
+	elif token_str == token_defs.token_defs_operations["CSQ"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["ADD"]:
+	elif token_str == token_defs.token_defs_operations["ADD"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["SUB"]:
+	elif token_str == token_defs.token_defs_operations["SUB"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["MULT"]:
+	elif token_str == token_defs.token_defs_operations["MULT"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["DIV"]:
+	elif token_str == token_defs.token_defs_operations["DIV"]:
 		return token_str
 
-	elif token_str == token_defs.token_defs["MOD"]:
+	elif token_str == token_defs.token_defs_operations["MOD"]:
 		return token_str
 
 	return None

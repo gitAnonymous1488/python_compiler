@@ -4,7 +4,7 @@
 # 
 # 
 
-token_defs = {
+token_defs_operations = {
 	"ASSIGNMENT": 		"=" 	,
 	"EQUALITY":			"==" 	,
 	"NOT_EQUALITY":		"!="	,
@@ -36,6 +36,15 @@ decimal_prefix = {
 	"DECIMAL": "."
 }
 
+token_str_def = {
+	"STR_QUOTE": 		"\""
+}
+
+
+key_words = [
+	""
+]
+
 
 def create_int_token(token):
 	return {
@@ -46,6 +55,18 @@ def create_int_token(token):
 def create_float(token):
 	return {
 		"KIND": "FLOAT",
+		"VALUE": token
+	}
+
+def create_id(token):
+	return {
+		"KIND": "ID",
+		"VALUE": token
+	}
+
+def create_str(token):
+	return {
+		"KIND": "STRING",
 		"VALUE": token
 	}
 
