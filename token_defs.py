@@ -130,6 +130,9 @@ def create_operation(token):
 	elif token == token_defs_operations["DECIMAL"]:
 		return {"KIND": "DECIMAL", "VALUE": token}
 
+def create_EOF():
+	return {"KIND": "EOF"}
+
 
 
 

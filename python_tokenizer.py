@@ -1,6 +1,7 @@
 import sys
 import token_defs
 import buffer_wrapper
+import tiny_parser
 
 file_contents = buffer_wrapper.read_ahead(sys.stdin.read())
 token_list = buffer_wrapper.token_list()
@@ -345,7 +346,11 @@ if __name__ == "__main__":
 	c = 0
 	token = next_token()
 	while token is not None:
-		print(token)
 		add_token_to_list(token)
 		token = next_token()
-	
+
+	add_token_to_list(token_defs.create_EOF())
+
+	tiny_parser.parse_tokens(get_token_list().token_list)
+	# for token in get_token_list().token_list:
+	# 	print(token)
